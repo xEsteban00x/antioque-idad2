@@ -1,0 +1,187 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FIESTA DE LA ANTIOQUEÑIDAD INEM 2025 - La Pintada</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .hero-bg {
+      background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('https://images.unsplash.com/photo-1507525428034-b723cf961d3e');
+      background-size: cover;
+      background-position: center;
+    }
+  </style>
+</head>
+<body class="bg-gray-50 font-sans text-gray-800">
+  <!-- Hero Section -->
+  <header class="hero-bg h-96 flex items-center justify-center text-white">
+    <div class="text-center">
+      <h1 class="text-5xl md:text-6xl font-extrabold drop-shadow-lg">FIESTA DE LA ANTIOQUEÑIDAD INEM 2025</h1>
+      <h2 class="text-3xl md:text-4xl mt-4 font-semibold">La Pintada: Corazón de Antioquia</h2>
+      <a href="#content" class="mt-6 inline-block bg-yellow-500 text-gray-900 py-3 px-8 rounded-full font-bold hover:bg-yellow-400 transition">Explora Ahora</a>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main id="content" class="container mx-auto px-4 py-12">
+    <!-- Introduction -->
+    <section class="mb-16 text-center">
+      <h3 class="text-4xl font-bold text-green-800 mb-4">Bienvenidos a La Pintada</h3>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto">
+        En el marco de la <strong>FIESTA DE LA ANTIOQUEÑIDAD INEM 2025</strong>, descubre La Pintada, un municipio vibrante donde la tradición antioqueña brilla con fuerza. ¡Sumérgete en su cultura, gastronomía y paisajes!
+      </p>
+    </section>
+
+    <!-- Location -->
+    <section class="mb-16 flex flex-col md:flex-row items-center">
+      <div class="md:w-1/2">
+        <h3 class="text-3xl font-bold text-green-800 mb-4">Ubicación</h3>
+        <p class="text-lg text-gray-600">
+          La Pintada está ubicada en el suroeste de Antioquia, a 57 km de Medellín, junto al río Cauca. Con un clima cálido de 26°C promedio, es un punto estratégico entre el Valle de Aburrá y el Eje Cafetero.
+        </p>
+      </div>
+      <div class="md:w-1/2 mt-6 md:mt-0 md:ml-8">
+        <img src="rio.jfif" alt="Vista del río Cauca en La Pintada" class="w-full h-64 object-cover rounded-lg shadow-lg">
+      </div>
+    </section>
+
+    <!-- Demographics -->
+    <section class="mb-16">
+      <h3 class="text-3xl font-bold text-green-800 mb-4 text-center">Demografía</h3>
+      <p class="text-lg text-gray-600 max-w-3xl mx-auto text-center">
+        Con cerca de 10,000 habitantes, La Pintada es un municipio acogedor donde la amabilidad y el espíritu emprendedor definen a su gente. Su economía se basa en la agricultura, el comercio y el turismo.
+      </p>
+    </section>
+
+    <!-- Typical Dishes -->
+    <section class="mb-16">
+      <h3 class="text-3xl font-bold text-green-800 mb-4 text-center">Platos Típicos</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+          <img src="bandeja.jfif" alt="Bandeja Paisa tradicional" class="w-full h-48 object-cover rounded-lg mb-4">
+          <h4 class="text-xl font-semibold text-gray-800">Bandeja Paisa</h4>
+          <p class="text-gray-600">Frijoles, arroz, carne molida, chicharrón, huevo, plátano, aguacate y arepa.</p>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+          <img src="sancocho.jfif" alt="Sancocho Antioqueño" class="w-full h-48 object-cover rounded-lg mb-4">
+          <h4 class="text-xl font-semibold text-gray-800">Sancocho Antioqueño</h4>
+          <p class="text-gray-600">Sopa contundente con carne, yuca, plátano y mazorca.</p>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+          <img src="dulce}.jfif" alt="Dulce de guayaba" class="w-full h-48 object-cover rounded-lg mb-4">
+          <h4 class="text-xl font-semibold text-gray-800">Dulce de Guayaba</h4>
+          <p class="text-gray-600">Un postre típico para endulzar el paladar.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Historical Figures -->
+    <section class="mb-16 flex flex-col md:flex-row items-center">
+      <div class="md:w-1/2">
+        <h3 class="text-3xl font-bold text-green-800 mb-4">Personajes Históricos</h3>
+        <ul class="list-disc list-inside text-lg text-gray-600">
+          <li><strong>José María Córdova:</strong> Héroe de la independencia con influencia en la región.</li>
+          <li><strong>Líderes Locales:</strong> Figuras que han impulsado el desarrollo cultural y agrícola de La Pintada.</li>
+        </ul>
+      </div>
+      <div class="md:w-1/2 mt-6 md:mt-0 md:ml-8">
+        <img src="jose.jfif" alt="Estatua histórica en Antioquia" class="w-full h-64 object-cover rounded-lg shadow-lg">
+      </div>
+    </section>
+
+    <!-- Interesting Facts -->
+    <section class="mb-16">
+      <h3 class="text-3xl font-bold text-green-800 mb-4 text-center">Datos Interesantes</h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+          <p class="text-lg text-gray-600"><strong>Puerta de Oro:</strong> La Pintada es conocida como la "Puerta de Oro del Suroeste Antioqueño".</p>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+          <p class="text-lg text-gray-600"><strong>Fiestas del Sol y del Río:</strong> Festividades que atraen a miles de visitantes cada año.</p>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+          <p class="text-lg text-gray-600"><strong>Pintura Rupestre:</strong> El nombre del municipio proviene de una pintura rupestre histórica.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Tourism -->
+    <section class="mb-16">
+      <h3 class="text-3xl font-bold text-green-800 mb-4 text-center">Turismo</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+          <img src="cauca.jfif" alt="Río Cauca para deportes acuáticos" class="w-full h-48 object-cover rounded-lg mb-4">
+          <h4 class="text-xl font-semibold text-gray-800">Río Cauca</h4>
+          <p class="text-gray-600">Perfecto para rafting, pesca y actividades acuáticas.</p>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+          <img src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e" alt="Finca en La Pintada" class="w-full h-48 object-cover rounded-lg mb-4">
+          <h4 class="text-xl font-semibold text-gray-800">Finca La Pintada</h4>
+          <p class="text-gray-600">Disfruta de la naturaleza y la gastronomía local.</p>
+        </div>
+        <div class="bg-white p-6 rounded-lg shadow-lg">
+          <img src="https://images.unsplash.com/photo-1444210971048-6130cf0c46cf" alt="Senderismo en La Pintada" class="w-full h-48 object-cover rounded-lg mb-4">
+          <h4 class="text-xl font-semibold text-gray-800">Rutas de Senderismo</h4>
+          <p class="text-gray-600">Explora los cerros y bosques de la región.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="text-center mb-16">
+      <h3 class="text-4xl font-bold text-green-800 mb-4">¡Vive la FIESTA DE LA ANTIOQUEÑIDAD INEM 2025!</h3>
+      <p class="text-xl text-gray-600 max-w-3xl mx-auto mb-6">
+        La Pintada te espera con su calidez, tradiciones y paisajes únicos. ¡Únete a la celebración de nuestra Antioqueñidad!
+      </p>
+      <a href="https://github.com/grok-user/la-pintada-antioquenidad" class="inline-block bg-yellow-500 text-gray-900 py-3 px-8 rounded-full font-bold hover:bg-yellow-400 transition">Visita el Repositorio en GitHub</a>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-green-800 text-white py-6">
+    <div class="container mx-auto px-4 text-center">
+      <p>&copy; 2025 FIESTA DE LA ANTIOQUEÑIDAD INEM - La Pintada. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+</body>
+</html>
